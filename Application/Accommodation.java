@@ -1,20 +1,24 @@
 public class Accommodation {
     private String availability;
-    private CleaningStatus cleaningStatus;
     private String accomDescriptionAndInventory;
     private String accommType;
     private float price;
     private int accommNo;
 
+    enum Level {
+        CLEAN,
+        DIRTY,
+        OFFLINE
+      }
+
     // Constructor
     public Accommodation(int accommNo, float price, String accommType,
                          String accomDescriptionAndInventory,
-                         CleaningStatus cleaningStatus, String availability) {
+                        String availability) {
         this.accommNo = accommNo;
         this.price = price;
         this.accommType = accommType;
         this.accomDescriptionAndInventory = accomDescriptionAndInventory;
-        this.cleaningStatus = cleaningStatus;
         this.availability = availability;
     }
 
@@ -28,12 +32,12 @@ public class Accommodation {
         this.availability = availability;
     }
 
-    public CleaningStatus getCleaningStatus() {
-        return cleaningStatus;
+    public Level getCleaningStatus() {
+        return Level.CLEAN;
     }
 
-    public void setCleaningStatus(CleaningStatus cleaningStatus) {
-        this.cleaningStatus = cleaningStatus;
+    public void setCleaningStatus(Level cleaningStatus) {
+        
     }
 
     public String getAccomDescriptionAndInventory() {
@@ -88,7 +92,7 @@ public class Accommodation {
 
     public static void main(String[] args) {
         // Example usage:
-        Accommodation accommodation = new Accommodation(1, 100.0f, "Type", "Description", CleaningStatus.CLEAN, "Available");
-        System.out.println("Accommodation Type: " + accommodation.getAccommType());
+        Accommodation accommodation = new Accommodation(1, 100.0f, "Type", "Description", "Available");
+        accommodation.setCleaningStatus(Level.CLEAN);
     }
 }
