@@ -84,8 +84,6 @@ public class Accommodation {
         return accommNo;
     }
 
-    // Other methods...
-
     public static void main(String[] args) {
         // Example usage:
         Accommodation accommodation = new Accommodation(1, 100.0f, "Type", "Description", CleaningStatus.CLEAN, "Available");
