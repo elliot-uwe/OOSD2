@@ -24,10 +24,7 @@ public class RentalAgreement {
         return leaseNumber;
     }
 
-    // Other methods...
-
     public static void main(String[] args) {
-        // Example usage:
         Room room = new Room(/* initialize your Room */);
         Student student = new Student(/* initialize your Student */);
         RentalAgreement rentalAgreement = new RentalAgreement(1, student, room);
