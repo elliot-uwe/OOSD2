@@ -1,38 +1,39 @@
 package oosd2assignment;
 
 public class RentalAgreement {
-    private Room room;
-    private Student studentInfo;
     private int leaseNumber;
+    private String firstName;
+    private String lastName;
+    private int studentNumber;
+    private String mobileNumber;
 
     // Constructor
-    public RentalAgreement(int leaseNumber, Student studentInfo, Room room) {
+    public RentalAgreement(int leaseNumber, String firstName, String lastName, int studentNumber, String mobileNumber) {
         this.leaseNumber = leaseNumber;
-        this.studentInfo = studentInfo;
-        this.room = room;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.studentNumber = studentNumber;
+        this.mobileNumber = mobileNumber;
     }
 
     // Getter methods
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public Student getStudentInfo() {
-        return studentInfo;
-    }
-
     public int getLeaseNumber() {
         return leaseNumber;
     }
 
-    public static void main(String[] args) {
-        Room room = new Room(/* initialize your Room */);
-        Student student = new Student("James", 325604, "07340532552");
-        RentalAgreement rentalAgreement = new RentalAgreement(1, student, room);
+    public String getFirstName() {
+        return firstName;
+    }
 
-        System.out.println("Lease Number: " + rentalAgreement.getLeaseNumber());
-        System.out.println("Student Info: " + rentalAgreement.getStudentInfo());
-        System.out.println("Room: " + rentalAgreement.getRoom());
+    public String getLastName() {
+        return lastName;
+    }
+    
+    public int getStudentNumber() {
+        return studentNumber;
+    }
+    
+    public String getMobileNumber() {
+        return mobileNumber;
     }
 }

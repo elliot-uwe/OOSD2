@@ -8,11 +8,12 @@ public class Accommodation {
     private float price;
     private int accommNo;
     private String[] itemsIncluded;
+    private RentalAgreement rentalAgreement;
 
     // Constructor
     public Accommodation(int accommNo, float price, String accommType,
                          String accomDescriptionAndInventory,
-                         String cleaningStatus, String availability, String[] itemsIncluded) {
+                         String cleaningStatus, String availability, String[] itemsIncluded, RentalAgreement rentalAgreement) {
         this.accommNo = accommNo;
         this.price = price;
         this.accommType = accommType;
@@ -28,6 +29,10 @@ public class Accommodation {
     public String getAvailability() {
         return availability;
     }
+    
+    public RentalAgreement getRentalAgreement(){
+        return rentalAgreement;
+    }
 
     public void setAvailability(String availability) {
         this.availability = availability;
@@ -39,6 +44,10 @@ public class Accommodation {
 
     public void setCleaningStatus(String cleaningStatus) {
         this.cleaningStatus = cleaningStatus;
+    }
+    
+    public void setRentalAgreement(RentalAgreement rentalAgreement){
+        this.rentalAgreement = rentalAgreement;
     }
 
     public String getAccomDescriptionAndInventory() {
@@ -70,10 +79,6 @@ public class Accommodation {
     }
 
     public void deleteRentalAgreement(RentalAgreement rentalAgreement) {
-
-    }
-
-    public void setRentalAgreement(RentalAgreement rentalAgreement) {
 
     }
 

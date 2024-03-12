@@ -71,8 +71,8 @@
       <Label layoutX="361.0" layoutY="673.0" text="Student No. :" />
       <Label layoutX="361.0" layoutY="704.0" text="Mobile :" />
       <Label layoutX="50.0" layoutY="775.0" text="Cleaning Status :" />
-      <Button layoutX="353.0" layoutY="757.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="94.0" text="Create" />
-      <Button layoutX="464.0" layoutY="757.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="94.0" text="Delete" />
+      <Button fx:id="createButton" layoutX="353.0" layoutY="757.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="94.0" text="Create" />
+      <Button fx:id="deleteButton" layoutX="464.0" layoutY="757.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="94.0" text="Delete" />
       <TextField fx:id="itemsIncluded" editable="false" layoutX="43.0" layoutY="815.0" prefHeight="51.0" prefWidth="514.0" />
       <TextField fx:id="telephone" editable="false" layoutX="322.0" layoutY="83.0" prefHeight="26.0" prefWidth="102.0" promptText="Telephone" />
       <ComboBox fx:id="hallComboBox" layoutX="161.0" layoutY="84.0" prefHeight="26.0" prefWidth="102.0" promptText="Select Halls" />
@@ -86,6 +86,11 @@
       <TextField fx:id="requiresCleaning" editable="false" layoutX="511.0" layoutY="160.0" prefHeight="26.0" prefWidth="70.0" promptText="Cleaning Status" />
       <TextField fx:id="hallManager" editable="false" layoutX="483.0" layoutY="83.0" prefHeight="26.0" prefWidth="102.0" promptText="Hall Manager" />
       <ComboBox fx:id="cleaningStatusComboBox" layoutX="150.0" layoutY="770.0" prefHeight="26.0" prefWidth="102.0" promptText="Select Cleaning Status" />
+      <TextField fx:id="leaseNumber" editable="false" layoutX="447.0" layoutY="580.0" prefHeight="26.0" prefWidth="102.0" promptText="Lease Number" />
+      <TextField fx:id="firstName" layoutX="447.0" layoutY="610.0" prefHeight="26.0" prefWidth="102.0" promptText="First Name" />
+      <TextField fx:id="lastName" layoutX="447.0" layoutY="640.0" prefHeight="26.0" prefWidth="102.0" promptText="Last Name" />
+      <TextField fx:id="studentNumber" layoutX="447.0" layoutY="668.0" prefHeight="26.0" prefWidth="102.0" promptText="Student Number" />
+      <TextField fx:id="mobileNumber" layoutX="447.0" layoutY="699.0" prefHeight="26.0" prefWidth="102.0" promptText="Mobile Number" />
       
    </children>
 </AnchorPane>

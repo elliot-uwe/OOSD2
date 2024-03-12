@@ -12,10 +12,35 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 
 public class GUIController implements Initializable {
+    
+    @FXML
+    private Button createButton;
+    
+    @FXML
+    private Button deleteButton;
+    
+    @FXML
+    private TextField leaseNumber;
+    
+    @FXML
+    private TextField firstName;
+    
+    @FXML
+    private TextField lastName;
+    
+    @FXML
+    private TextField studentNumber;
+    
+    @FXML
+    private TextField mobileNumber;
 
     @FXML
     private TextField telephone;
@@ -75,17 +100,29 @@ public class GUIController implements Initializable {
     private ComboBox<String> cleaningStatusComboBox; // ComboBox to display cleaning status name
 
     private ArrayList<Hall> halls; // ArrayList to store hall instances
+    private ArrayList<RentalAgreement> rentalAgreements;
     
+    public int itemCount;
 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        if (rentalAgreements != null){
+                    itemCount = (rentalAgreements.size());
+                    leaseNumber.setText(String.valueOf(itemCount));
+                } else {
+                    leaseNumber.clear();
+                }
+        
         // Initialize the ArrayList
         halls = new ArrayList<>();
+        rentalAgreements = new ArrayList<>();
         
         cleaningStatusComboBox.getItems().addAll("Clean", "Dirty", "Offline");
         
         cleaningStatusComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            
             if (newValue != null) {
                 System.out.println("Selected Option: " + newValue);
                 
@@ -96,6 +133,7 @@ public class GUIController implements Initializable {
                 for (Hall hall : halls) {
                     if (hall.getHallName().equals(hallName)) {
                         selectedHall = hall;
+                        offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
                         break;
                     }
                 }
@@ -103,30 +141,39 @@ public class GUIController implements Initializable {
                 // Find the selected accommodation
                 Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
 
+
                 if (selectedAccommodation != null) {
-                    // Run a method based on the selected option
+                    ObservableList<Accommodation> accommodationList = FXCollections.observableArrayList(selectedHall.getAccommodations());
                     switch (newValue) {
                         case "Clean":
                             selectedAccommodation.setCleaningStatus("Clean");
-                            ObservableList<Accommodation> accommodationList1 = FXCollections.observableArrayList(selectedHall.getAccommodations());
-                            accommodationTableView.setItems(accommodationList1);
+                            // Update the list to reflect the change
+                            accommodationList.set(accommodationList.indexOf(selectedAccommodation), selectedAccommodation);
+                            // Set the updated list to the TableView
+                            accommodationTableView.refresh();
+                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
+                            //offlineRooms.setText();
                             break;
                         case "Dirty":
                             selectedAccommodation.setCleaningStatus("Dirty");
-                            ObservableList<Accommodation> accommodationList2 = FXCollections.observableArrayList(selectedHall.getAccommodations());
-                            accommodationTableView.setItems(accommodationList2);
+                            // Update the list to reflect the change
+                            accommodationList.set(accommodationList.indexOf(selectedAccommodation), selectedAccommodation);
+                            // Set the updated list to the TableView
+                            accommodationTableView.refresh();
+                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
                             break;
                         case "Offline":
                             selectedAccommodation.setCleaningStatus("Offline");
-                            ObservableList<Accommodation> accommodationList3 = FXCollections.observableArrayList(selectedHall.getAccommodations());
-                            accommodationTableView.setItems(accommodationList3);
+                            // Update the list to reflect the change
+                            accommodationList.set(accommodationList.indexOf(selectedAccommodation), selectedAccommodation);
+                            // Set the updated list to the TableView
+                            accommodationTableView.refresh();
+                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
                             break;
                         default:
                             // Handle default case if needed
                             break;
                     }
-                    
-                    
                 }
                 
             } else {
@@ -134,12 +181,82 @@ public class GUIController implements Initializable {
             }
         });
 
+        // Create an event handler for the button
+        EventHandler<ActionEvent> createEventHandler;
 
+        createEventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String firstNameValue = firstName.getText();
+                String lastNameValue = lastName.getText();
+                String mobileNumberValue = mobileNumber.getText();
+                String studentNumberValue = studentNumber.getText();
 
+                // Check if firstName, lastName, and mobileNumber are Strings and studentNumber is an integer
+                if (firstNameValue instanceof String && 
+                    lastNameValue instanceof String && 
+                    mobileNumberValue instanceof String) {
+                    try {
+                        // Attempt to parse studentNumberValue into an integer
+                        int studentNumberInt = Integer.parseInt(studentNumberValue);
+
+                        // If parsing succeeds, create the rental agreement
+                        RentalAgreement newRentalAgreement = new RentalAgreement(itemCount, firstNameValue, lastNameValue, studentNumberInt, mobileNumberValue);
+                        rentalAgreements.add(newRentalAgreement);
+                        Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
+                        selectedAccommodation.setRentalAgreement(newRentalAgreement);
+
+                        // Output details to the console
+                        System.out.println("Rental Agreement Details:");
+                        System.out.println("Lease Number: " + newRentalAgreement.getLeaseNumber());
+                        System.out.println("First Name: " + newRentalAgreement.getFirstName());
+                        System.out.println("Last Name: " + newRentalAgreement.getLastName());
+                        System.out.println("Student Number: " + newRentalAgreement.getStudentNumber());
+                        System.out.println("Mobile Number: " + newRentalAgreement.getMobileNumber());
+
+                    } catch (NumberFormatException e) {
+                        // If parsing fails, studentNumber is not an integer
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Number Validation Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Please Ensure Student Number is an Integer");
+                        alert.showAndWait();
+                    }
+                } else {
+                    // Handle the case where firstName, lastName, or mobileNumber are not Strings
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("String Validation Error");
+                        alert.setHeaderText(null);
+                        //Irrelevant Alert??
+                        alert.setContentText("Please Ensure First Name and Last Name are Strings");
+                        alert.showAndWait();
+                }
+            }
+        };
+        
+        EventHandler<ActionEvent> deleteEventHandler;
+        deleteEventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
+                selectedAccommodation.setRentalAgreement(null);
+                itemCount = itemCount - 1;
+                leaseNumber.clear();
+                firstName.clear();
+                lastName.clear();
+                studentNumber.clear();
+                mobileNumber.clear();
+            }
+        };
+        // Assuming anotherButton is the reference to your other button
+        deleteButton.setOnAction(deleteEventHandler);
+        
+        createButton.setOnAction(createEventHandler);
+        
         // Create instances of Hall and add their names to the ComboBox
         halls.add(new Hall("Brecon Court", "07123456789", "Joshua",40, 40, 0, 0));
-        halls.add(new Hall("Cotswold Court", "07123456788", "John",40, 30, 5, 5));
-        halls.add(new Hall("Mendip Court", "07123456787", "Elliot",40, 20, 0, 20));
+        halls.add(new Hall("Cotswold Court", "07123456788", "John",40, 40, 0, 0));
+        halls.add(new Hall("Mendip Court", "07123456787", "Elliot",40, 40, 0, 00));
         halls.add(new Hall("Quantock Court", "07123456786", "Yousseff",40, 40, 0, 0));
 
         for (Hall hall : halls) {
@@ -186,17 +303,36 @@ public class GUIController implements Initializable {
         // Set a listener for TableView selection change event
         accommodationTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Accommodation> observable, Accommodation oldValue, Accommodation newValue) -> {
             if (newValue != null) {
+                itemCount = (rentalAgreements.size());
+                leaseNumber.setText(String.valueOf(itemCount));
                 // Set the accommNo TextField with the selected accommodation's accommNo
                 accommNo.setText("" + newValue.getAccommNo());
                 type.setText("" + newValue.getType());
                 price.setText("" + newValue.getPrice());
                 occupancy.setText("" + newValue.getAvailability());
                 itemsIncluded.setText(newValue.getItemsIncluded());
+                
+                
+                RentalAgreement rentalAgreement = newValue.getRentalAgreement();
+                if (rentalAgreement != null) {
+                    // Set the text of various text fields based on the rental agreement details
+                    leaseNumber.setText(String.valueOf(rentalAgreement.getLeaseNumber()));
+                    firstName.setText(rentalAgreement.getFirstName());
+                    lastName.setText(rentalAgreement.getLastName());
+                    studentNumber.setText(String.valueOf(rentalAgreement.getStudentNumber()));
+                    mobileNumber.setText(rentalAgreement.getMobileNumber());
+                } else {
+                    // If RentalAgreement object is null, clear the text of the related text fields
+                    
+                    firstName.clear();
+                    lastName.clear();
+                    studentNumber.clear();
+                    mobileNumber.clear();
+                }
             }
             
             
-        });
-        
+        });       
         
     }
 }
