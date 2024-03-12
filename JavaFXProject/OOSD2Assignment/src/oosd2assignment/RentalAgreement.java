@@ -1,3 +1,5 @@
+package oosd2assignment;
+
 public class RentalAgreement {
     private Room room;
     private Student studentInfo;

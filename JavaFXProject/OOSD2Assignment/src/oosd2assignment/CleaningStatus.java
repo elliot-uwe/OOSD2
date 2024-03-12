@@ -1,3 +1,5 @@
+package oosd2assignment;
+
 public class CleaningStatus {
     private String cleaningStatus;
 

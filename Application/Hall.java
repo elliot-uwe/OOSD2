@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Hall {
     public ArrayList<Accommodation> accommodations;
+
     public String hallName;
     public String hallTelNumber;
     public int totalRooms;
