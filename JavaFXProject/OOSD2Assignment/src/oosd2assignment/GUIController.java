@@ -2,12 +2,12 @@ package oosd2assignment;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -133,7 +133,6 @@ public class GUIController implements Initializable {
                 for (Hall hall : halls) {
                     if (hall.getHallName().equals(hallName)) {
                         selectedHall = hall;
-                        offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
                         break;
                     }
                 }
@@ -141,34 +140,46 @@ public class GUIController implements Initializable {
                 // Find the selected accommodation
                 Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
 
-
                 if (selectedAccommodation != null) {
                     ObservableList<Accommodation> accommodationList = FXCollections.observableArrayList(selectedHall.getAccommodations());
                     switch (newValue) {
                         case "Clean":
                             selectedAccommodation.setCleaningStatus("Clean");
-                            // Update the list to reflect the change
+                            selectedAccommodation.setAvailability("Available");
+                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
+                            availableRooms.setText(String.valueOf(selectedHall.getAvailableRooms()));
+                            requiresCleaning.setText(String.valueOf(selectedHall.getRoomsReqCleaning()));
+                            
                             accommodationList.set(accommodationList.indexOf(selectedAccommodation), selectedAccommodation);
                             // Set the updated list to the TableView
                             accommodationTableView.refresh();
-                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
-                            //offlineRooms.setText();
                             break;
                         case "Dirty":
                             selectedAccommodation.setCleaningStatus("Dirty");
+                            selectedAccommodation.setAvailability("Unavailable");
                             // Update the list to reflect the change
+                            // Update offline rooms, available rooms, and require cleaning rooms
+                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
+                            availableRooms.setText(String.valueOf(selectedHall.getAvailableRooms()));
+                            requiresCleaning.setText(String.valueOf(selectedHall.getRoomsReqCleaning()));
+                            
+                            
                             accommodationList.set(accommodationList.indexOf(selectedAccommodation), selectedAccommodation);
                             // Set the updated list to the TableView
                             accommodationTableView.refresh();
-                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
                             break;
                         case "Offline":
                             selectedAccommodation.setCleaningStatus("Offline");
+                            selectedAccommodation.setAvailability("Unavailable");
                             // Update the list to reflect the change
+                            
+                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
+                            availableRooms.setText(String.valueOf(selectedHall.getAvailableRooms()));
+                            requiresCleaning.setText(String.valueOf(selectedHall.getRoomsReqCleaning()));
+                            
                             accommodationList.set(accommodationList.indexOf(selectedAccommodation), selectedAccommodation);
                             // Set the updated list to the TableView
                             accommodationTableView.refresh();
-                            offlineRooms.setText(String.valueOf(selectedHall.getRoomsOffline()));
                             break;
                         default:
                             // Handle default case if needed
@@ -196,32 +207,68 @@ public class GUIController implements Initializable {
                 if (firstNameValue instanceof String && 
                     lastNameValue instanceof String && 
                     mobileNumberValue instanceof String) {
-                    try {
-                        // Attempt to parse studentNumberValue into an integer
-                        int studentNumberInt = Integer.parseInt(studentNumberValue);
+                    if (!firstNameValue.trim().isEmpty() &&
+                        !lastNameValue.trim().isEmpty() &&
+                        !mobileNumberValue.trim().isEmpty()) {
+                        try {
 
-                        // If parsing succeeds, create the rental agreement
-                        RentalAgreement newRentalAgreement = new RentalAgreement(itemCount, firstNameValue, lastNameValue, studentNumberInt, mobileNumberValue);
-                        rentalAgreements.add(newRentalAgreement);
-                        Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
-                        selectedAccommodation.setRentalAgreement(newRentalAgreement);
+                            Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
+                            if (selectedAccommodation.getAvailability() == "Available"){
+                                // Attempt to parse studentNumberValue into an integer
+                                int studentNumberInt = Integer.parseInt(studentNumberValue);
+                                // If parsing succeeds, create the rental agreement
+                                RentalAgreement newRentalAgreement = new RentalAgreement(itemCount, firstNameValue, lastNameValue, studentNumberInt, mobileNumberValue);
+                                rentalAgreements.add(newRentalAgreement);
 
-                        // Output details to the console
-                        System.out.println("Rental Agreement Details:");
-                        System.out.println("Lease Number: " + newRentalAgreement.getLeaseNumber());
-                        System.out.println("First Name: " + newRentalAgreement.getFirstName());
-                        System.out.println("Last Name: " + newRentalAgreement.getLastName());
-                        System.out.println("Student Number: " + newRentalAgreement.getStudentNumber());
-                        System.out.println("Mobile Number: " + newRentalAgreement.getMobileNumber());
+                                System.out.println("" + selectedAccommodation.getAvailability());
+                                selectedAccommodation.setRentalAgreement(newRentalAgreement);
+                                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    } catch (NumberFormatException e) {
-                        // If parsing fails, studentNumber is not an integer
+                                if (selectedAccommodation.getRentalAgreement() != null){
+                                    selectedAccommodation.setAvailability("Unavailable"); 
+                                }
+
+                                occupancy.setText("Occupied");
+
+                                Hall selectedHall = null;
+                                String hallName = hallComboBox.getValue();
+                                for (Hall hall : halls) {
+                                    if (hall.getHallName().equals(hallName)) {
+                                        selectedHall = hall;
+                                        availableRooms.setText(String.valueOf(selectedHall.getAvailableRooms()));  
+                                        ObservableList<Accommodation> accommodationList = FXCollections.observableArrayList(selectedHall.getAccommodations());
+                                        accommodationTableView.setItems(accommodationList);
+                                        accommodationTableView.refresh();
+                                        break;
+                                    }
+                                }
+                            } else {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Room Unavailable");
+                                alert.setHeaderText(null);
+                                alert.setContentText("Please select an available accommodation to create a rental agreement");
+                                alert.showAndWait();
+                            }
+
+
+
+                        } catch (NumberFormatException e) {
+                            // If parsing fails, studentNumber is not an integer
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Number Validation Error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Please Ensure Student Number is a number");
+                            alert.showAndWait();
+                        }                        
+                    }
+                    else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Number Validation Error");
+                        alert.setTitle("Fill in fields");
                         alert.setHeaderText(null);
-                        alert.setContentText("Please Ensure Student Number is an Integer");
+                        alert.setContentText("Please make sure First Name, Last Name, and Mobile Number is filled in");
                         alert.showAndWait();
                     }
+
                 } else {
                     // Handle the case where firstName, lastName, or mobileNumber are not Strings
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -240,12 +287,31 @@ public class GUIController implements Initializable {
             public void handle(ActionEvent event) {
                 Accommodation selectedAccommodation = accommodationTableView.getSelectionModel().getSelectedItem();
                 selectedAccommodation.setRentalAgreement(null);
+                selectedAccommodation.setAvailability("Available");
+                occupancy.setText("Unnoccupied");
+                
                 itemCount = itemCount - 1;
-                leaseNumber.clear();
+                leaseNumber.setText(String.valueOf(itemCount));
                 firstName.clear();
                 lastName.clear();
                 studentNumber.clear();
                 mobileNumber.clear();
+                Hall selectedHall = null;
+                String hallName = hallComboBox.getValue();
+                for (Hall hall : halls) {
+                    if (hall.getHallName().equals(hallName)) {
+                        selectedHall = hall;
+                        availableRooms.setText(String.valueOf(selectedHall.getAvailableRooms()));
+                        if (selectedAccommodation.getRentalAgreement() != null){
+                            occupancy.setText("Occupied");
+                        } 
+                        break;
+                    }
+                }
+                
+                ObservableList<Accommodation> accommodationList = FXCollections.observableArrayList(selectedHall.getAccommodations());
+                accommodationTableView.setItems(accommodationList);
+                accommodationTableView.refresh();
             }
         };
         // Assuming anotherButton is the reference to your other button
@@ -303,13 +369,18 @@ public class GUIController implements Initializable {
         // Set a listener for TableView selection change event
         accommodationTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Accommodation> observable, Accommodation oldValue, Accommodation newValue) -> {
             if (newValue != null) {
+                if (newValue.getRentalAgreement() != null){
+                    occupancy.setText("Occupied");
+                } else {
+                    occupancy.setText("Unnoccupied");
+                }
                 itemCount = (rentalAgreements.size());
                 leaseNumber.setText(String.valueOf(itemCount));
                 // Set the accommNo TextField with the selected accommodation's accommNo
                 accommNo.setText("" + newValue.getAccommNo());
                 type.setText("" + newValue.getType());
                 price.setText("" + newValue.getPrice());
-                occupancy.setText("" + newValue.getAvailability());
+                
                 itemsIncluded.setText(newValue.getItemsIncluded());
                 
                 

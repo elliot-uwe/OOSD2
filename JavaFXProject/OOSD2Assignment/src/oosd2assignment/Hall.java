@@ -66,10 +66,22 @@ public class Hall {
     }
 
     public int getRoomsReqCleaning() {
-        return roomsReqCleaning;
+        roomsReqCleaning = 0;
+        for (Accommodation accommodation : accommodations) {
+            if (accommodation.getCleaningStatus() != "Dirty") {
+                roomsReqCleaning++;
+            }
+        }
+        return (accommodations.size() - roomsReqCleaning);
     }
 
     public int getRoomsOffline() {
+        roomsOffline = 0;
+        for (Accommodation accommodation : accommodations) {
+            if (accommodation.getCleaningStatus() == "Offline") {
+                roomsOffline++;
+            }
+        }
         return roomsOffline;
     }
     

@@ -78,10 +78,6 @@ public class Accommodation {
         return accommNo;
     }
 
-    public void deleteRentalAgreement(RentalAgreement rentalAgreement) {
-
-    }
-
     public String getType() {
         return accommType;
     }
