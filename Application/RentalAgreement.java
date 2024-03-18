@@ -26,7 +26,7 @@ public class RentalAgreement {
 
     public static void main(String[] args) {
         Room room = new Room(/* initialize your Room */);
-        Student student = new Student(/* initialize your Student */);
+        Student student = new Student("James", 325604, "07340532552");
         RentalAgreement rentalAgreement = new RentalAgreement(1, student, room);
 
         System.out.println("Lease Number: " + rentalAgreement.getLeaseNumber());
