@@ -39,7 +39,7 @@ public class Hall {
         // Add 10 superior rooms
         for (int i = 31; i <= 40; i++) {
             String[] itemsIncluded = {"WiFi", "TV", "Air conditioning", "Heating", "Mini fridge", "Swimming Pool", "Lounge", "Gym"};
-            accommodations.add(new Accommodation(i, 760.0f, "Superior", "Description", "Clean", "Available", itemsIncluded, null));
+            accommodations.add(new Accommodation(i, 750.0f, "Superior", "Description", "Clean", "Available", itemsIncluded, null));
         }
     }
     
