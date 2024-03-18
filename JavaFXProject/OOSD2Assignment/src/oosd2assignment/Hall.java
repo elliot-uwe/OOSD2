@@ -58,7 +58,7 @@ public class Hall {
     public int getAvailableRooms() {
         availableRooms = 0;
         for (Accommodation accommodation : accommodations) {
-            if (accommodation.getCleaningStatus() != "Offline" && accommodation.getRentalAgreement() == null) {
+            if (accommodation.getCleaningStatus() != "Offline" && accommodation.getCleaningStatus() != "Dirty" && accommodation.getRentalAgreement() == null) {
                 availableRooms++;
             }
         }
